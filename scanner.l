@@ -22,6 +22,7 @@ UN_AdapterBrd   (__AdapterBoard)
 UN_Pin          (__Pin)
 UN_PinType      (__PinType)
 UN_Name         (__Name)
+UN_Resource     (__Resource)
 UN_Ppid         (__Ppid)
 UN_XCoord       (__XCoord)
 UN_Shape        (__Shape)
@@ -37,17 +38,18 @@ UN_MaxSite      (__MaxSite)
 
 {UN_Head}           { return T_Head; }
 {UN_Version}        { _DUPTEXT; return T_Version;}
-{UN_AdapterBrd}     { return T_AdapterBrd; } 
-{UN_Pin}            { return T_Pin; }        
-{UN_PinType}        { return T_PinType; }    
-{UN_Name}           { return T_Name; }       
-{UN_Ppid}           { return T_Ppid; }       
-{UN_XCoord}         { return T_XCoord; }     
-{UN_Shape}          { return T_Shape; }      
-{UN_Connection}     { return T_Connection; } 
-{UN_Instrument}     { return T_Instrument; } 
+{UN_AdapterBrd}     { return T_AdapterBrd; }
+{UN_Pin}            { return T_Pin; }
+{UN_PinType}        { return T_PinType; }
+{UN_Name}           { return T_Name; }
+{UN_Resource}       { return T_Resource; }
+{UN_Ppid}           { return T_Ppid; }
+{UN_XCoord}         { return T_XCoord; }
+{UN_Shape}          { return T_Shape; }
+{UN_Connection}     { return T_Connection; }
+{UN_Instrument}     { return T_Instrument; }
 {UN_SlotChannel}    { return T_SlotChannel; }
-{UN_MaxSite}        { return T_MaxSite; }    
+{UN_MaxSite}        { return T_MaxSite; }
 
 {OPERATOR}      { return yytext[0]; }
 "int"           { return T_Int; }
@@ -61,7 +63,7 @@ UN_MaxSite      (__MaxSite)
 .               { unrecognized_char(yytext[0]); }
 %%
 
-int yywrap(void) { 
+int yywrap(void) {
     return 1;
 }
 
