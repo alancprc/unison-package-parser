@@ -8,7 +8,9 @@ OBJ      = lex.yy.o y.tab.o
 TESTOUT  = $(basename $(TESTFILE)).asm
 OUTFILES = lex.yy.c y.tab.c y.tab.h y.output $(OUT)
 
-.PHONY: build test simulate clean
+.PHONY: build test simulate clean run
+
+all: build run
 
 build: $(OUT)
 
@@ -31,3 +33,6 @@ lex.yy.c: $(SCANNER) y.tab.c
 
 y.tab.c: $(PARSER)
 	bison -vdty $<
+
+run:
+	./$(OUT) < $(TESTFILE)

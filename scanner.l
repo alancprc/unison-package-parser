@@ -14,8 +14,8 @@ NUMBER          (([0-9]+\.)?[0-9]+)
 STRING          (\042[^\042\n]*\042)
 IDENTIFIER      ([_a-zA-Z][_a-zA-Z0-9]*)
 WHITESPACE      ([ \t]*)
-SINGLE_COMMENT1     ("//"[^\n]*)
-SINGLE_COMMENT2     ("#"[^\n]*)
+SINGLE_COMMENT1 ("//"[^\n]*)
+SINGLE_COMMENT2 ("#"[^\n]*)
 UN_Head         (Unison)
 UN_Version      (SyntaxRevision[0-9]+(\.[0-9]+)*)
 UN_AdapterBrd   (__AdapterBoard)
@@ -52,8 +52,6 @@ UN_MaxSite      (__MaxSite)
 {UN_MaxSite}        { return T_MaxSite; }
 
 {OPERATOR}      { return yytext[0]; }
-"int"           { return T_Int; }
-"print"         { return T_Print; }
 
 {NUMBER}        { _DUPTEXT; return T_Number; }
 {STRING}        { _DUPTEXT; return T_String; }
