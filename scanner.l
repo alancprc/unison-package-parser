@@ -7,6 +7,8 @@ void unrecognized_char(char c);
 #define _DUPTEXT {yylval = strdup(yytext);}
 %}
 
+%x IN_COMMENT
+
 /* note \042 is '"' */
 
 OPERATOR        ([-/+*()=,;:.{}\[\]])
@@ -31,25 +33,50 @@ UN_Instrument   (__Instrument)
 UN_SlotChannel  (__SlotChannel)
 UN_MaxSite      (__MaxSite)
 
+UN_PinGroup     (__PinGroup)
+UN_PinTypeDef   (__PinType\s+\w+\s*{)
+UN_Expression   (__Expression)
+UN_Group        (__Group)
+UN_Type         (__Type)
+UN_String       (__String)
+UN_ControlFlags (__ControlFlags)
+
 %%
 {WHITESPACE}        { /* ignore every whitespace */ }
 {SINGLE_COMMENT1}   { /* skip for single line comment */    }
 {SINGLE_COMMENT2}   { /* skip for single line comment */    }
 
-{UN_Head}           { return T_Head; }
-{UN_Version}        { _DUPTEXT; return T_Version;}
-{UN_AdapterBrd}     { return T_AdapterBrd; }
-{UN_Pin}            { return T_Pin; }
-{UN_PinType}        { return T_PinType; }
-{UN_Name}           { return T_Name; }
-{UN_Resource}       { return T_Resource; }
-{UN_Ppid}           { return T_Ppid; }
-{UN_XCoord}         { return T_XCoord; }
-{UN_Shape}          { return T_Shape; }
-{UN_Connection}     { return T_Connection; }
-{UN_Instrument}     { return T_Instrument; }
-{UN_SlotChannel}    { return T_SlotChannel; }
-{UN_MaxSite}        { return T_MaxSite; }
+<INITIAL>{
+"/*"              BEGIN(IN_COMMENT);
+}
+<IN_COMMENT>{
+"*/"      BEGIN(INITIAL);
+[^*\n]+   // eat comment in chunks
+"*"       // eat the lone star
+\n        yylineno++;
+}
+
+{UN_Head}           { return UN_Head; }
+{UN_Version}        { _DUPTEXT; return UN_Version;}
+{UN_AdapterBrd}     { return UN_AdapterBrd; }
+{UN_Pin}            { return UN_Pin; }
+{UN_PinType}        { return UN_PinType; }
+{UN_Name}           { return UN_Name; }
+{UN_Resource}       { return UN_Resource; }
+{UN_Ppid}           { return UN_Ppid; }
+{UN_XCoord}         { return UN_XCoord; }
+{UN_Shape}          { return UN_Shape; }
+{UN_Connection}     { return UN_Connection; }
+{UN_Instrument}     { return UN_Instrument; }
+{UN_SlotChannel}    { return UN_SlotChannel; }
+{UN_MaxSite}        { return UN_MaxSite; }
+
+{UN_PinGroup}       { return UN_PinGroup; }
+{UN_Expression}     { return UN_Expression; }
+{UN_Group}          { return UN_Group; }
+{UN_Type}           { return UN_Type; }
+{UN_String}         { return UN_String; }
+
 
 {OPERATOR}      { return yytext[0]; }
 

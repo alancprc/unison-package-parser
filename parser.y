@@ -8,24 +8,29 @@ void yyerror(const char*);
 %}
 
 %token T_String T_Number T_Identifier T_Int
-T_Head
-T_Version
-T_AdapterBrd
-T_Pin
-T_PinType
-T_Name
-T_Resource
-T_Ppid
-T_XCoord
-T_Shape
-T_Connection
-T_Instrument
-T_SlotChannel
-T_MaxSite
+UN_Head
+UN_Version
+UN_AdapterBrd
+UN_Pin
+UN_PinType
+UN_Name
+UN_Resource
+UN_Ppid
+UN_XCoord
+UN_Shape
+UN_Connection
+UN_Instrument
+UN_SlotChannel
+UN_MaxSite
+UN_PinGroup
+UN_Expression
+UN_Group
+UN_Type
+UN_String
 
 %right '='
-%right T_PinType T_Name T_Resource T_Ppid T_XCoord T_Shape T_Connection T_Instrument
-T_SlotChannel
+%right UN_PinType UN_Name UN_Resource UN_Ppid UN_XCoord UN_Shape UN_Connection UN_Instrument
+UN_SlotChannel
 %left '+' '-'
 %left '*' '/'
 %right U_neg
@@ -38,38 +43,50 @@ T_SlotChannel
 S:
     Stmt                        { /* empty */ }
 |   S Stmt                      { /* empty */ }
+|   error                       { yyerrok;    }
 ;
 
 Stmt:
     SyntaxVersion               { /* empty */ }
-|   T_AdapterBrd T_Identifier '{' __Pin __MaxSite '}'
+|   UN_AdapterBrd T_Identifier '{' __Pin __MaxSite '}'
+|   IGNORE
 ;
+
+IGNORE:
+    UN_PinType T_Identifier '{' UN_Type '=' T_Identifier ';' '}'
+|   UN_PinGroup T_Identifier '{' UN_Group '=' Expression '}'
+;
+
+Expression:
+    UN_Expression '{' UN_String '=' T_String ';' '}'
+;
+
 
 __Pin:
     /* empty */
-|   __Pin T_Pin '{' Pin_item '}'
+|   __Pin UN_Pin '{' Pin_item '}'
 ;
 
 /* U1709 */
 Pin_item:
     Pin_item Pin_item %prec ';'
-|   T_Name '=' T_Identifier ';'
-|   T_Ppid '=' T_String ';'
-|   T_XCoord '=' '(' T_Number ',' T_Number ')' ';'
-|   T_Shape '=' T_Number ';'
-|   T_PinType '=' T_Identifier ';'  { printf("\n%s", $3); }
-|   T_Connection '[' T_Number ']' '{' Connection_item '}'
+|   UN_Name '=' T_Identifier ';'
+|   UN_Ppid '=' T_String ';'
+|   UN_XCoord '=' '(' T_Number ',' T_Number ')' ';'
+|   UN_Shape '=' T_Number ';'
+|   UN_PinType '=' T_Identifier ';'  { printf("\n%s", $3); }
+|   UN_Connection '[' T_Number ']' '{' Connection_item '}'
 ;
 
 Connection_item:
     Connection_item Connection_item %prec '='
-|   T_Instrument '{' T_String '}' ';'   { printf(",\t%s", $3); }
-|   T_Resource '=' T_Identifier ';'
+|   UN_Instrument '{' T_String '}' ';'   { printf(",\t%s", $3); }
+|   UN_Resource '=' T_Identifier ';'
 |   Channel                             { printf(", %s", $1); }
 ;
 
 Channel:
-    T_SlotChannel '[' T_Number ']' '=' T_Identifier '.' T_Identifier ';'    {
+    UN_SlotChannel '[' T_Number ']' '=' T_Identifier '.' T_Identifier ';'    {
         int sz = snprintf(NULL, 0, "%s%s%s", $6, ".", $8);
         $$ = malloc(sz + 1);
         snprintf($$, sz + 1, "%s%s%s", $6, ".", $8);
@@ -77,11 +94,11 @@ Channel:
 ;
 
 __MaxSite:
-    T_MaxSite '=' T_Number ';'  { printf("\n"); }
+    UN_MaxSite '=' T_Number ';'  { printf("\n"); }
 ;
 
 SyntaxVersion:
-    T_Head ':' T_Version ';' { printf("%s\n", $3); }
+    UN_Head ':' UN_Version ';' { printf("%s\n", $3); }
 ;
 
 %%
