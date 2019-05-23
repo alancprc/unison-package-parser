@@ -31,6 +31,7 @@ UN_Shape        (__Shape)
 UN_Connection   (__Connection)
 UN_Instrument   (__Instrument)
 UN_SlotChannel  (__SlotChannel)
+UN_TesterChannel (__TesterChannel)
 UN_MaxSite      (__MaxSite)
 
 UN_PinGroup     (__PinGroup)
@@ -69,6 +70,7 @@ UN_ControlFlags (__ControlFlags)
 {UN_Connection}     { return UN_Connection; }
 {UN_Instrument}     { return UN_Instrument; }
 {UN_SlotChannel}    { return UN_SlotChannel; }
+{UN_TesterChannel}  { return UN_TesterChannel; }
 {UN_MaxSite}        { return UN_MaxSite; }
 
 {UN_PinGroup}       { return UN_PinGroup; }

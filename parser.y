@@ -21,6 +21,7 @@ UN_Shape
 UN_Connection
 UN_Instrument
 UN_SlotChannel
+UN_TesterChannel
 UN_MaxSite
 UN_PinGroup
 UN_Expression
@@ -31,6 +32,7 @@ UN_String
 %right '='
 %right UN_PinType UN_Name UN_Resource UN_Ppid UN_XCoord UN_Shape UN_Connection UN_Instrument
 UN_SlotChannel
+UN_TesterChannel
 %left '+' '-'
 %left '*' '/'
 %right U_neg
@@ -83,6 +85,7 @@ Connection_item:
 |   UN_Instrument '{' T_String '}' ';'   { printf(",\t%s", $3); }
 |   UN_Resource '=' T_Identifier ';'
 |   Channel                             { printf(", %s", $1); }
+|   Channel_U4                          { printf(", %s", $1); }
 ;
 
 Channel:
@@ -93,12 +96,29 @@ Channel:
     }
 ;
 
+Channel_U4:
+    UN_TesterChannel '[' T_Number ']' '=' Channel_NO_U4 ';'    {
+        if (atoi($3) == 1) {
+          int sz = snprintf(NULL, 0, "\t\"\", %s", $6);
+          $$ = malloc(sz + 1);
+          snprintf($$, sz + 1, "\t\"\", %s", $6);
+        } else {
+          int sz = snprintf(NULL, 0, "%s", $6);
+          $$ = malloc(sz + 1);
+          snprintf($$, sz + 1, "%s", $6);
+        }
+    }
+;
+
+Channel_NO_U4:
+    T_Number | T_Identifier;
+
 __MaxSite:
     UN_MaxSite '=' T_Number ';'  { printf("\n"); }
 ;
 
 SyntaxVersion:
-    UN_Head ':' UN_Version ';' { printf("%s\n", $3); }
+    UN_Head ':' UN_Version ';' { printf("SyntaxVersion,%s\n", $3+14); }
 ;
 
 %%
