@@ -83,6 +83,7 @@ Pin_item:
 |   UN_Shape '=' T_Number ';'
 |   UN_PinType '=' T_Identifier ';'  { printf("\n%s", $3); }
 |   UN_Connection '[' T_Number ']' '{' Connection_item '}'
+|   IGNORE
 ;
 
 Connection_item:
@@ -121,6 +122,7 @@ Channel_NO_U4:
 
 __MaxSite:
     UN_MaxSite '=' T_Number ';'  { printf("\n"); }
+|   /* empty when single site*/
 ;
 
 PinType:
