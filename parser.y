@@ -91,6 +91,7 @@ Connection_item:
 |   UN_Resource '=' T_Identifier ';'
 |   Channel                             { printf(", %s", $1); }
 |   Channel_U4                          { printf(", %s", $1); }
+|   /* empty */
 ;
 
 Channel:
