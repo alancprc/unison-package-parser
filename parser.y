@@ -27,12 +27,16 @@ UN_PinGroup
 UN_Expression
 UN_Group
 UN_Type
+UN_Comment
+UN_Pin_Direction
 UN_String
 
 %right '='
 %right UN_PinType UN_Name UN_Resource UN_Ppid UN_XCoord UN_Shape UN_Connection UN_Instrument
 UN_SlotChannel
 UN_TesterChannel
+UN_Comment
+UN_Pin_Direction
 %left '+' '-'
 %left '*' '/'
 %right U_neg
@@ -55,8 +59,9 @@ Stmt:
 ;
 
 IGNORE:
-    UN_PinType T_Identifier '{' UN_Type '=' T_Identifier ';' '}'
+    UN_Comment '=' T_String ';'
 |   UN_PinGroup T_Identifier '{' UN_Group '=' Expression '}'
+|   PinType
 ;
 
 Expression:
@@ -115,6 +120,17 @@ Channel_NO_U4:
 
 __MaxSite:
     UN_MaxSite '=' T_Number ';'  { printf("\n"); }
+;
+
+PinType:
+    UN_PinType T_Identifier '{' PinType_item '}' ;
+    
+
+PinType_item:
+    PinType_item PinType_item
+|   UN_Comment '=' T_String ';'
+|   UN_Type '=' T_Identifier ';'
+|   UN_Pin_Direction '=' T_Identifier ';'
 ;
 
 SyntaxVersion:

@@ -41,6 +41,8 @@ UN_Group        (__Group)
 UN_Type         (__Type)
 UN_String       (__String)
 UN_ControlFlags (__ControlFlags)
+UN_Comment      (__Comment)
+UN_Pin_Direction (__Direction)
 
 %%
 {WHITESPACE}        { /* ignore every whitespace */ }
@@ -72,6 +74,8 @@ UN_ControlFlags (__ControlFlags)
 {UN_SlotChannel}    { return UN_SlotChannel; }
 {UN_TesterChannel}  { return UN_TesterChannel; }
 {UN_MaxSite}        { return UN_MaxSite; }
+{UN_Comment}        { return UN_Comment; }
+{UN_Pin_Direction}  { return UN_Pin_Direction; }
 
 {UN_PinGroup}       { return UN_PinGroup; }
 {UN_Expression}     { return UN_Expression; }
